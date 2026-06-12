@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIDU 학생 홈 · 반응형 4종</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── 토큰 (다크모드) ── */
+:root {
+  --bg:       #0A0B14;
+  --surface:  #15182A;
+  --raised:   #1B1F38;
+  --sunken:   #0F1120;
+  --indigo:   #4F5BD5;
+  --indigo-d: #3A4393;
+  --indigo-l: #8B95E8;
+  --indigo-bg:#1E2148;
+  --text:     #F1F3FA;
+  --mute:     #9DA2BC;
+  --mute2:    #676C88;
+  --line:     #262A45;
+  --ok:       #4FB286;
+  --ok-bg:    #16291F;
+  --ok-text:  #7FD3A8;
+  --warn:     #E2726E;
+  --warn-bg:  #2A1A1E;
+  --warn-text:#F0A8A4;
+  --amber:    #E0A23C;
+  --font: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: #05060C;
+  color: var(--text);
+  line-height: 1.5;
+  padding: 32px 20px;
+}
+
+/* ── 페이지 헤더 ── */
+.page-header { max-width: 1280px; margin: 0 auto 12px; }
+.page-header h1 { font-size: 15px; font-weight: 500; color: #c5c8e0; }
+.page-header p { font-size: 12px; color: #6b6e8a; margin-top: 3px; }
+
+/* ── 탭 버튼 ── */
+.view-tabs { display: flex; gap: 8px; max-width: 1280px; margin: 0 auto 24px; flex-wrap: wrap; }
+.view-tabs button {
+  background: #1a1d33; color: #9da2bc; border: 1px solid #262a45;
+  border-radius: 8px; padding: 8px 16px; font-size: 12px; font-weight: 500;
+  font-family: var(--font); cursor: pointer; transition: all .15s;
+}
+.view-tabs button.active { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+
+/* ── 디바이스 컨테이너 ── */
+.stage { max-width: 1280px; margin: 0 auto; display: flex; justify-content: center; }
+.device { display: none; }
+.device.show { display: block; width: 100%; }
+
+/* ════ 공통 컴포넌트 ════ */
+.screen { background: var(--bg); border-radius: var(--r-lg); overflow: hidden; position: relative; }
+
+/* 헤더 */
+.hdr { background: var(--bg); padding: 14px 18px 14px; border-bottom: 1px solid var(--line); }
+.hdr-inner { display: flex; align-items: center; justify-content: space-between; }
+
+/* 과목 탭 (1단, 방향1: 현재 세부과목명 표시) */
+.subj-row { display: flex; align-items: center; gap: 8px; }
+.subj-btn {
+  font-size: 16px; font-weight: 500; color: var(--mute2);
+  cursor: pointer; padding: 6px 14px; border: none; background: none;
+  font-family: var(--font); display: flex; align-items: center; gap: 4px;
+  border-radius: 18px; transition: all .12s;
+}
+.subj-btn.on { color: #fff; background: var(--indigo); }
+.subj-btn .chev { font-size: 11px; opacity: .85; }
+
+/* 알림 아이콘 */
+.bell-btn {
+  width: 36px; height: 36px; border: none; background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; color: var(--mute); transition: background .12s;
+}
+.bell-btn:hover { background: var(--line); }
+.bell-btn svg { width: 20px; height: 20px; }
+
+/* 본문 */
+.body { padding: 16px 18px 0; }
+
+/* 인사말 */
+.greet { margin-bottom: 14px; }
+.greet h2 { font-size: 18px; font-weight: 600; color: var(--text); line-height: 1.3; }
+.greet p { font-size: 13px; color: var(--mute); margin-top: 3px; }
+
+/* Today Card */
+.today-card { background: var(--surface); border-radius: var(--r-md); padding: 18px; margin-bottom: 12px; }
+.today-card.state-a { border: 1.5px solid var(--indigo); }
+.today-card.state-b { border: 1.5px solid var(--ok); }
+.today-card.state-c { border: 1px solid var(--line); }
+
+.card-eyebrow { font-size: 11px; font-weight: 500; display: flex; align-items: center; gap: 5px; margin-bottom: 10px; }
+.card-eyebrow.indigo { color: var(--indigo-l); }
+.card-eyebrow.green { color: var(--ok-text); }
+.card-eyebrow.gray { color: var(--mute2); }
+.card-eyebrow svg { width: 13px; height: 13px; }
+
+.card-title { font-size: 21px; font-weight: 600; color: var(--text); line-height: 1.3; margin-bottom: 3px; }
+.card-sub { font-size: 13px; color: var(--mute); margin-bottom: 12px; }
+
+/* Stat chips */
+.stat-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.stat-chip { padding: 6px 11px; border-radius: 8px; font-size: 11px; }
+.stat-chip .v { font-weight: 600; }
+.stat-chip.neutral { background: var(--sunken); color: var(--mute); }
+.stat-chip.neutral .v { color: var(--text); }
+.stat-chip.warn { background: var(--warn-bg); color: var(--warn-text); }
+.stat-chip.warn .v { color: #f5bfbc; }
+.stat-chip.ok { background: var(--ok-bg); color: var(--ok-text); }
+.stat-chip.ok .v { color: #a4e3c3; }
+
+/* 멘트 박스 */
+.ment-box { background: var(--sunken); border-radius: 10px; padding: 10px 13px; font-size: 12px; color: var(--mute); line-height: 1.6; margin-bottom: 14px; }
+
+/* CTA */
+.cta-full {
+  width: 100%; background: var(--indigo); color: #fff; border: none;
+  border-radius: var(--r-sm); padding: 14px; font-size: 14px; font-weight: 600;
+  font-family: var(--font); cursor: pointer; display: flex; align-items: center;
+  justify-content: center; gap: 6px; transition: background .15s;
+}
+.cta-full:hover { background: #5a66e0; }
+.cta-row { display: flex; gap: 8px; }
+.cta-outline {
+  flex: 1; background: none; border: 1px solid var(--line); border-radius: var(--r-sm);
+  padding: 12px; font-size: 13px; color: var(--mute); font-family: var(--font);
+  cursor: pointer; transition: all .12s;
+}
+.cta-outline:hover { border-color: var(--mute2); color: var(--text); }
+.cta-fill {
+  flex: 1; background: var(--indigo); border: none; border-radius: var(--r-sm);
+  padding: 12px; font-size: 13px; font-weight: 600; color: #fff;
+  font-family: var(--font); cursor: pointer; transition: background .15s;
+}
+.cta-fill:hover { background: #5a66e0; }
+
+/* 신규 빈 상태 */
+.empty-center { text-align: center; padding: 20px 0 16px; }
+.empty-icon {
+  width: 52px; height: 52px; border-radius: 50%; background: var(--sunken);
+  border: 1px solid var(--line); display: flex; align-items: center;
+  justify-content: center; margin: 0 auto 12px;
+}
+.empty-icon svg { width: 24px; height: 24px; color: var(--mute2); }
+.empty-center h3 { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.empty-center p { font-size: 13px; color: var(--mute); line-height: 1.7; }
+
+/* 3-stat */
+.stat3 { display: flex; gap: 8px; margin-bottom: 12px; }
+.stat3-card { flex: 1; background: var(--surface); border-radius: var(--r-sm); padding: 12px; text-align: center; }
+.stat3-card.green-bg { background: var(--ok-bg); }
+.stat3-card .val { font-size: 16px; font-weight: 600; color: var(--text); line-height: 1.2; }
+.stat3-card.green-bg .val { color: var(--ok-text); }
+.stat3-card .lbl { font-size: 10px; color: var(--mute2); margin-top: 3px; }
+.stat3-card.green-bg .lbl { color: var(--ok); }
+.stat3-card .val.muted { color: var(--mute2); }
+
+/* AIDU 효과 */
+.effect-card { background: var(--surface); border-radius: var(--r-md); padding: 16px 18px; margin-bottom: 12px; border: 1px solid var(--line); }
+.effect-eyebrow { font-size: 11px; color: var(--mute); display: flex; align-items: center; gap: 5px; margin-bottom: 6px; }
+.effect-eyebrow svg { width: 13px; height: 13px; color: var(--amber); }
+.effect-big { font-size: 26px; font-weight: 700; color: var(--indigo-l); line-height: 1.1; margin-bottom: 2px; }
+.effect-sub { font-size: 11px; color: var(--mute2); margin-bottom: 12px; }
+.bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.bar-label { font-size: 10px; color: var(--mute2); width: 40px; flex-shrink: 0; }
+.bar-track { flex: 1; height: 6px; background: var(--sunken); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; }
+.bar-fill.gray { background: var(--mute2); opacity: .55; }
+.bar-fill.indigo { background: var(--indigo); }
+.bar-val { font-size: 10px; color: var(--mute); width: 28px; text-align: right; flex-shrink: 0; }
+.effect-stats { display: flex; justify-content: space-around; border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; }
+.effect-stat { text-align: center; }
+.effect-stat .v { font-size: 14px; font-weight: 600; color: var(--text); }
+.effect-stat .v.green { color: var(--ok-text); }
+.effect-stat .l { font-size: 10px; color: var(--mute2); margin-top: 2px; }
+
+/* 섹션 */
+.section { margin-bottom: 12px; }
+.section-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.section-hd h3 { font-size: 14px; font-weight: 600; color: var(--text); }
+.section-hd a { font-size: 12px; color: var(--mute2); text-decoration: none; cursor: pointer; }
+.section-hd a:hover { color: var(--mute); }
+
+/* 이어서 풀기 */
+.cont-item { display: flex; align-items: center; gap: 11px; background: var(--surface); border-radius: var(--r-sm); padding: 12px 14px; margin-bottom: 7px; cursor: pointer; transition: background .12s; }
+.cont-item:hover { background: var(--raised); }
+.cont-icon { font-size: 20px; flex-shrink: 0; }
+.cont-info { flex: 1; min-width: 0; }
+.cont-info .name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cont-bar { height: 4px; background: var(--sunken); border-radius: 2px; overflow: hidden; }
+.cont-bar-fill { height: 100%; background: var(--indigo); border-radius: 2px; transition: width .3s; }
+.cont-pct { font-size: 11px; color: var(--mute); flex-shrink: 0; }
+
+/* 추천 세트 */
+.rec-card { background: var(--surface); border-radius: var(--r-sm); padding: 13px 14px; margin-bottom: 7px; cursor: pointer; transition: background .12s; }
+.rec-card.hi { border: 1.5px solid var(--indigo); }
+.rec-card:hover { background: var(--raised); }
+.rec-card-hd { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+.rec-eyebrow { font-size: 11px; font-weight: 500; color: var(--indigo-l); margin-bottom: 3px; }
+.rec-eyebrow.gray { color: var(--mute2); }
+.rec-title { font-size: 13px; font-weight: 600; color: var(--text); }
+.rec-desc { font-size: 11px; color: var(--mute2); margin-top: 3px; }
+.rec-badge { background: var(--indigo-bg); color: var(--indigo-l); font-size: 10px; font-weight: 500; padding: 3px 8px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; margin-left: 8px; }
+
+/* 랭킹 */
+.rank-row { background: var(--surface); border-radius: var(--r-sm); padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; cursor: pointer; transition: background .12s; }
+.rank-row:hover { background: var(--raised); }
+.rank-row p { font-size: 13px; color: var(--mute); }
+.rank-row p b { color: var(--indigo-l); }
+.rank-row .sub { font-size: 11px; color: var(--mute2); margin-top: 2px; }
+.rank-row svg { width: 16px; height: 16px; color: var(--indigo-l); }
+
+/* 하단 탭바 */
+.bottom-tab { background: var(--bg); border-top: 1px solid var(--line); display: flex; justify-content: space-around; padding: 10px 0 20px; margin-top: 16px; }
+.tab-item { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 4px 12px; border-radius: 10px; transition: background .12s; }
+.tab-item:hover { background: var(--surface); }
+.tab-item svg { width: 22px; height: 22px; }
+.tab-item span { font-size: 10px; font-weight: 500; }
+.tab-item.on svg, .tab-item.on span { color: var(--indigo-l); }
+.tab-item.off svg, .tab-item.off span { color: var(--mute2); }
+
+/* ── 바텀시트 (방향1: 세부과목 선택) ── */
+.sheet-overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,.55);
+  display: none; align-items: flex-end; z-index: 50;
+  border-radius: var(--r-lg);
+}
+.sheet-overlay.show { display: flex; }
+.sheet {
+  width: 100%; background: var(--surface); border-radius: 20px 20px 0 0;
+  padding: 8px 18px 24px; animation: sheetUp .25s ease;
+}
+@keyframes sheetUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.sheet-handle { width: 36px; height: 4px; background: var(--line); border-radius: 2px; margin: 6px auto 14px; }
+.sheet-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.sheet-hd h3 { font-size: 17px; font-weight: 600; color: var(--text); }
+.sheet-hd .close { width: 30px; height: 30px; border-radius: 50%; background: var(--sunken); border: none; color: var(--mute); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.sheet-hd .close svg { width: 16px; height: 16px; }
+.sheet-sub { font-size: 12px; color: var(--mute2); margin-bottom: 14px; }
+.sheet-item { display: flex; align-items: center; gap: 13px; padding: 13px; border-radius: 12px; cursor: pointer; transition: background .12s; margin-bottom: 6px; }
+.sheet-item:hover { background: var(--sunken); }
+.sheet-item.on { background: var(--indigo-bg); }
+.sheet-icon { width: 40px; height: 40px; border-radius: 11px; background: var(--sunken); display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; }
+.sheet-item.on .sheet-icon { background: var(--indigo); }
+.sheet-info { flex: 1; }
+.sheet-info .nm { font-size: 14px; font-weight: 600; color: var(--text); }
+.sheet-info .ds { font-size: 11px; color: var(--mute2); margin-top: 2px; }
+.sheet-radio { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--line); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.sheet-item.on .sheet-radio { border-color: var(--indigo); background: var(--indigo); }
+.sheet-radio svg { width: 13px; height: 13px; color: #fff; display: none; }
+.sheet-item.on .sheet-radio svg { display: block; }
+.sheet-divider { border: none; border-top: 1px solid var(--line); margin: 10px 0; }
+.sheet-add { display: flex; align-items: center; gap: 8px; padding: 12px; font-size: 13px; color: var(--mute2); cursor: pointer; border-radius: 10px; }
+.sheet-add:hover { background: var(--sunken); color: var(--mute); }
+.sheet-add svg { width: 16px; height: 16px; }
+
+/* 신규 효과 빈 상태 */
+.effect-empty { background: var(--surface); border-radius: var(--r-md); padding: 22px; text-align: center; margin-bottom: 12px; border: 1px solid var(--line); }
+.effect-empty svg { width: 26px; height: 26px; color: var(--mute2); margin-bottom: 8px; }
+.effect-empty p { font-size: 12px; color: var(--mute); line-height: 1.7; }
+
+/* ════ MOBILE 390 ════ */
+#mobile .screen { width: 390px; margin: 0 auto; box-shadow: 0 8px 40px rgba(0,0,0,.5); }
+
+/* ════ TABLET PORTRAIT 834 ════ */
+#tablet-portrait .screen { width: 834px; margin: 0 auto; box-shadow: 0 8px 40px rgba(0,0,0,.5); }
+#tablet-portrait .hdr { padding: 14px 22px; }
+#tablet-portrait .body { padding: 18px 22px 0; }
+#tablet-portrait .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px; }
+#tablet-portrait .right-col { display: flex; flex-direction: column; gap: 12px; }
+#tablet-portrait .cont-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+#tablet-portrait .cont-grid .cont-item { margin-bottom: 0; }
+
+/* ════ TABLET LANDSCAPE 1194 ════ */
+#tablet-landscape .screen { width: 1194px; margin: 0 auto; box-shadow: 0 8px 40px rgba(0,0,0,.5); }
+#tablet-landscape .hdr { padding: 14px 28px; }
+#tablet-landscape .hdr-top { display: flex; align-items: center; justify-content: space-between; }
+#tablet-landscape .hdr-inline { display: flex; align-items: center; gap: 8px; }
+#tablet-landscape .body { padding: 20px 28px 0; display: grid; grid-template-columns: 420px 1fr; gap: 20px; align-items: start; }
+#tablet-landscape .left-col { position: sticky; top: 20px; }
+#tablet-landscape .right-col { display: flex; flex-direction: column; gap: 12px; }
+#tablet-landscape .bottom-tab { justify-content: center; gap: 48px; margin-top: 20px; }
+
+/* ════ WEB 1280 ════ */
+#web .screen { width: 1280px; margin: 0 auto; box-shadow: 0 8px 40px rgba(0,0,0,.5); }
+#web .top-nav { background: var(--bg); border-bottom: 1px solid var(--line); padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
+#web .top-nav-left { display: flex; align-items: center; gap: 24px; }
+#web .logo { font-size: 18px; font-weight: 700; color: var(--indigo-l); letter-spacing: -.5px; }
+#web .top-nav-right { display: flex; align-items: center; gap: 16px; }
+#web .nav-btn-group { display: flex; }
+#web .nav-btn-group button { padding: 7px 18px; font-size: 13px; font-family: var(--font); background: none; border: 1px solid var(--line); color: var(--mute); cursor: pointer; transition: all .12s; }
+#web .nav-btn-group button:first-child { border-radius: 8px 0 0 8px; }
+#web .nav-btn-group button:last-child { border-left: none; border-radius: 0 8px 8px 0; }
+#web .nav-btn-group button:not(:first-child):not(:last-child) { border-left: none; }
+#web .nav-btn-group button:hover { background: var(--surface); color: var(--text); }
+#web .body { padding: 24px 32px 32px; display: grid; grid-template-columns: 380px 1fr 1fr; gap: 20px; align-items: start; }
+#web .col { display: flex; flex-direction: column; gap: 12px; }
+#web .bottom-tab { display: none; }
+
+/* ════ 상태 탭 ════ */
+.state-tabs { display: flex; gap: 6px; padding: 14px 18px 0; background: var(--bg); }
+.state-tab-btn { padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 500; font-family: var(--font); border: none; cursor: pointer; background: var(--surface); color: var(--mute); transition: all .12s; }
+.state-tab-btn.active { background: var(--indigo); color: #fff; }
+.state-panel { display: none; }
+.state-panel.show { display: block; }
+
+/* ════ 반응형 ════ */
+@media (max-width: 1280px) {
+  #web .screen { width: 100%; }
+  #web .body { grid-template-columns: 1fr 1fr; }
+  #web .col:last-child { grid-column: 1 / -1; }
+}
+@media (max-width: 1194px) {
+  #tablet-landscape .screen { width: 100%; }
+  #tablet-landscape .body { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 834px) {
+  #tablet-portrait .screen { width: 100%; }
+  #tablet-portrait .main-grid { grid-template-columns: 1fr; }
+  #tablet-portrait .cont-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 390px) {
+  #mobile .screen { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>AIDU 학생 홈 · 반응형 4종</h1>
+  <p>상태 A(정상) / B(완료) / C(신규) · 디바이스별 전환 · 세부과목은 헤더 탭 → 바텀시트</p>
+</div>
+
+<div class="view-tabs">
+  <button class="active" onclick="showDevice('mobile',this)">Mobile 390</button>
+  <button onclick="showDevice('tablet-portrait',this)">Tablet Portrait 834</button>
+  <button onclick="showDevice('tablet-landscape',this)">Tablet Landscape 1194</button>
+  <button onclick="showDevice('web',this)">Web 1280</button>
+</div>
+
+<div class="stage">
+
+<!-- ════ MOBILE ════ -->
+<div id="mobile" class="device show">
+  <div class="screen">
+    <div class="hdr">
+      <div class="hdr-inner">
+        <div class="subj-row">
+          <button class="subj-btn on" onclick="openSheet('m')">통합과학 <span class="chev">▾</span></button>
+          <button class="subj-btn">영어</button>
+          <button class="subj-btn">국어</button>
+        </div>
+        <button class="bell-btn" aria-label="알림">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="state-tabs">
+      <button class="state-tab-btn active" onclick="showState('m',this,'a')">A · 정상</button>
+      <button class="state-tab-btn" onclick="showState('m',this,'b')">B · 완료</button>
+      <button class="state-tab-btn" onclick="showState('m',this,'c')">C · 신규</button>
+    </div>
+
+    <!-- A -->
+    <div id="m-a" class="state-panel show">
+      <div class="body">
+        <div class="greet"><h2>민서야, 7일째다</h2><p>이 흐름 아까우니까 오늘도 가자</p></div>
+        <div class="today-card state-a">
+          <div class="card-eyebrow indigo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>AI 코치가 골랐어</div>
+          <div class="card-title">산화·환원의 정의</div>
+          <div class="card-sub">집중 10문제</div>
+          <div class="stat-chips">
+            <span class="stat-chip neutral">달성 <span class="v">1%</span></span>
+            <span class="stat-chip neutral">예상 <span class="v">+25점</span></span>
+            <span class="stat-chip neutral">절약 <span class="v">35분</span></span>
+            <span class="stat-chip warn">취약 <span class="v">5개</span></span>
+          </div>
+          <div class="ment-box">이 유형 네 번 틀렸어. 오늘 끝내버리자</div>
+          <button class="cta-full"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>AI 맞춤 학습 시작 →</button>
+        </div>
+        <div class="stat3">
+          <div class="stat3-card"><div class="val">🔥 7일</div><div class="lbl">연속 학습</div></div>
+          <div class="stat3-card"><div class="val">52%</div><div class="lbl">정답률</div></div>
+          <div class="stat3-card"><div class="val">155분</div><div class="lbl">절약</div></div>
+        </div>
+        <div class="effect-card">
+          <div class="effect-eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>AIDU 학습 효과</div>
+          <div class="effect-big">155분 절약</div>
+          <div class="effect-sub">이번 주 누적</div>
+          <div class="bar-row"><span class="bar-label">종이/펜</span><div class="bar-track"><div class="bar-fill gray" style="width:75%"></div></div><span class="bar-val">45분</span></div>
+          <div class="bar-row"><span class="bar-label">AI 학습</span><div class="bar-track"><div class="bar-fill indigo" style="width:60%"></div></div><span class="bar-val">41분</span></div>
+          <div class="effect-stats">
+            <div class="effect-stat"><div class="v green">-17개</div><div class="l">불필요</div></div>
+            <div class="effect-stat"><div class="v">72%</div><div class="l">목표달성</div></div>
+            <div class="effect-stat"><div class="v">x5.0</div><div class="l">학습효율</div></div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-hd"><h3>이어서 풀기</h3><a>전체보기</a></div>
+          <div class="cont-item"><span class="cont-icon">🔬</span><div class="cont-info"><div class="name">통합과학 · 생명 시스템</div><div class="cont-bar"><div class="cont-bar-fill" style="width:62%"></div></div></div><span class="cont-pct">62%</span></div>
+          <div class="cont-item"><span class="cont-icon">📗</span><div class="cont-info"><div class="name">영어 · 단어</div><div class="cont-bar"><div class="cont-bar-fill" style="width:28%"></div></div></div><span class="cont-pct">28%</span></div>
+        </div>
+        <div class="rank-row"><div><p>이번 주 우리 반 <b>12위</b></p><div class="sub">한 칸만 더 올려보자</div></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+      </div>
+      <div class="bottom-tab">
+        <div class="tab-item on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>홈</span></div>
+        <div class="tab-item off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>학습</span></div>
+        <div class="tab-item off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>리포트</span></div>
+        <div class="tab-item off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>마이</span></div>
+      </div>
+    </div>
+
+    <!-- B -->
+    <div id="m-b" class="state-panel">
+      <div class="body">
+        <div class="greet"><h2>민서야, 8일째야</h2><p>오늘 다 했네. 내일도 이 흐름 이어가자</p></div>
+        <div class="today-card state-b">
+          <div class="card-eyebrow green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>오늘 학습 완료</div>
+          <div class="card-title">산화·환원의 정의</div>
+          <div class="card-sub">10문제 완료</div>
+          <div class="stat-chips">
+            <span class="stat-chip ok">완료 <span class="v">10문제</span></span>
+            <span class="stat-chip ok">획득 <span class="v">+25점</span></span>
+            <span class="stat-chip ok">🔥 <span class="v">8일 연속</span></span>
+          </div>
+          <div class="ment-box">8일째야. 이 흐름 아까우니까 내일도 오자</div>
+          <div class="cta-row"><button class="cta-outline">리포트 보기 →</button><button class="cta-fill">틀린 문제 복습 →</button></div>
+        </div>
+        <div class="stat3">
+          <div class="stat3-card green-bg"><div class="val">🔥 8일</div><div class="lbl">연속 학습</div></div>
+          <div class="stat3-card"><div class="val">68%</div><div class="lbl">정답률</div></div>
+          <div class="stat3-card"><div class="val">180분</div><div class="lbl">절약</div></div>
+        </div>
+        <div class="effect-card">
+          <div class="effect-eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>AIDU 학습 효과</div>
+          <div class="effect-big">180분 절약</div>
+          <div class="effect-sub">이번 주 누적</div>
+          <div class="bar-row"><span class="bar-label">종이/펜</span><div class="bar-track"><div class="bar-fill gray" style="width:75%"></div></div><span class="bar-val">45분</span></div>
+          <div class="bar-row"><span class="bar-label">AI 학습</span><div class="bar-track"><div class="bar-fill indigo" style="width:70%"></div></div><span class="bar-val">41분</span></div>
+          <div class="effect-stats">
+            <div class="effect-stat"><div class="v green">-17개</div><div class="l">불필요</div></div>
+            <div class="effect-stat"><div class="v">72%</div><div class="l">목표달성</div></div>
+            <div class="effect-stat"><div class="v">x5.0</div><div class="l">학습효율</div></div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-hd"><h3>이어서 풀기</h3><a>전체보기</a></div>
+          <div class="cont-item"><span class="cont-icon">📗</span><div class="cont-info"><div class="name">영어 · 단어</div><div class="cont-bar"><div class="cont-bar-fill" style="width:28%"></div></div></div><span class="cont-pct">28%</span></div>
+          <div class="cont-item"><span class="cont-icon">📘</span><div class="cont-info"><div class="name">국어 · 나의 학습 세트</div><div class="cont-bar"><div class="cont-bar-fill" style="width:0%"></div></div></div><span class="cont-pct">0%</span></div>
+        </div>
+        <div class="rank-row"><div><p>이번 주 우리 반 <b>12위</b></p><div class="sub">한 칸만 더 올려보자</div></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+      </div>
+      <div class="bottom-tab">
+        <div class="tab-item on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>홈</span></div>
+        <div class="tab-item off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>학습</span></div>
+        <div class="tab-item off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>리포트</span></div>
+        <div class="tab-item off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>마이</span></div>
+      </div>
+    </div>
+
+    <!-- C -->
+    <div id="m-c" class="state-panel">
+      <div class="body">
+        <div class="greet"><h2>안녕, 처음이구나</h2><p>딱 한 번만 풀어봐. 맞게 짜줄게</p></div>
+        <div class="today-card state-c">
+          <div class="card-eyebrow gray"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>AI 코치</div>
+          <div class="empty-center">
+            <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+            <h3>아직 아무것도 몰라</h3>
+            <p>딱 한 번만 풀어봐.<br>그럼 딱 맞게 짜줄게</p>
+          </div>
+          <button class="cta-full">첫 학습 시작하기 →</button>
+        </div>
+        <div class="stat3">
+          <div class="stat3-card"><div class="val muted">—</div><div class="lbl">연속 학습</div></div>
+          <div class="stat3-card"><div class="val muted">—</div><div class="lbl">정답률</div></div>
+          <div class="stat3-card"><div class="val muted">—</div><div class="lbl">절약</div></div>
+        </div>
+        <div class="section">
+          <div class="section-hd"><h3>추천 첫 학습 세트</h3><a>전체보기</a></div>
+          <div class="rec-card hi">
+            <div class="rec-card-hd"><div><div class="rec-eyebrow">통합과학 · 기초</div><div class="rec-title">과학의 기초 10문제</div></div><span class="rec-badge">추천</span></div>
+            <div class="rec-desc">AI가 분석하기 좋은 시작점이야</div>
+          </div>
+          <div class="rec-card"><div class="rec-eyebrow gray">통합과학 · 생명</div><div class="rec-title">생명 시스템 10문제</div><div class="rec-desc">출제 빈도 높은 단원</div></div>
+        </div>
+        <div class="rank-row"><div><p>랭킹 <b style="color:var(--mute2)">—</b></p><div class="sub">첫 학습 후 집계돼</div></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--mute2)" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+      </div>
+      <div class="bottom-tab">
+        <div class="tab-item on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>홈</span></div>
+        <div class="tab-item off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>학습</span></div>
+        <div class="tab-item off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>리포트</span></div>
+        <div class="tab-item off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>마이</span></div>
+      </div>
+    </div>
+
+    <!-- 바텀시트 (모바일) -->
+    <div class="sheet-overlay" id="sheet-m" onclick="closeSheetBg(event,'m')">
+      <div class="sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-hd"><h3>과학 과목 선택</h3><button class="close" onclick="closeSheet('m')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+        <div class="sheet-sub">내가 수강 중인 과목</div>
+        <div class="sheet-item on">
+          <div class="sheet-icon">🔬</div>
+          <div class="sheet-info"><div class="nm">통합과학</div><div class="ds">고1 공통 · 현재 학습 중</div></div>
+          <div class="sheet-radio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </div>
+        <div class="sheet-item">
+          <div class="sheet-icon">⚗️</div>
+          <div class="sheet-info"><div class="nm">화학Ⅰ</div><div class="ds">수능 선택 · 물질의 구조</div></div>
+          <div class="sheet-radio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </div>
+        <div class="sheet-item">
+          <div class="sheet-icon">🌍</div>
+          <div class="sheet-info"><div class="nm">지구과학Ⅰ</div><div class="ds">수능 선택 · 지구와 우주</div></div>
+          <div class="sheet-radio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </div>
+        <hr class="sheet-divider">
+        <div class="sheet-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>수강 과목 추가하기</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════ TABLET PORTRAIT ════ -->
+<div id="tablet-portrait" class="device">
+  <div class="screen">
+    <div class="hdr">
+      <div class="hdr-inner">
+        <div class="subj-row">
+          <button class="subj-btn on" onclick="openSheet('tp')">통합과학 <span class="chev">▾</span></button>
+          <button class="subj-btn">영어</button>
+          <button class="subj-btn">국어</button>
+        </div>
+        <button class="bell-btn" aria-label="알림"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="greet"><h2 style="font-size:20px;">민서야, 7일째다</h2><p>이 흐름 아까우니까 오늘도 가자</p></div>
+      <div class="main-grid">
+        <div class="today-card state-a" style="margin-bottom:0;">
+          <div class="card-eyebrow indigo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>AI 코치가 골랐어</div>
+          <div class="card-title">산화·환원의 정의</div>
+          <div class="card-sub">집중 10문제</div>
+          <div class="stat-chips">
+            <span class="stat-chip neutral">달성 <span class="v">1%</span></span>
+            <span class="stat-chip neutral">예상 <span class="v">+25점</span></span>
+            <span class="stat-chip neutral">절약 <span class="v">35분</span></span>
+            <span class="stat-chip warn">취약 <span class="v">5개</span></span>
+          </div>
+          <div class="ment-box">이 유형 네 번 틀렸어. 오늘 끝내버리자</div>
+          <button class="cta-full"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>AI 맞춤 학습 시작 →</button>
+        </div>
+        <div class="right-col">
+          <div class="stat3">
+            <div class="stat3-card"><div class="val">🔥 7일</div><div class="lbl">연속 학습</div></div>
+            <div class="stat3-card"><div class="val">52%</div><div class="lbl">정답률</div></div>
+            <div class="stat3-card"><div class="val">155분</div><div class="lbl">절약</div></div>
+          </div>
+          <div class="effect-card" style="margin-bottom:0; flex:1;">
+            <div class="effect-eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>AIDU 학습 효과</div>
+            <div class="effect-big">155분 절약</div>
+            <div class="effect-sub">이번 주 누적</div>
+            <div class="bar-row"><span class="bar-label">종이/펜</span><div class="bar-track"><div class="bar-fill gray" style="width:75%"></div></div><span class="bar-val">45분</span></div>
+            <div class="bar-row"><span class="bar-label">AI 학습</span><div class="bar-track"><div class="bar-fill indigo" style="width:60%"></div></div><span class="bar-val">41분</span></div>
+            <div class="effect-stats">
+              <div class="effect-stat"><div class="v green">-17개</div><div class="l">불필요</div></div>
+              <div class="effect-stat"><div class="v">72%</div><div class="l">목표달성</div></div>
+              <div class="effect-stat"><div class="v">x5.0</div><div class="l">학습효율</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="section" style="margin-top:14px;">
+        <div class="section-hd"><h3>이어서 풀기</h3><a>전체보기</a></div>
+        <div class="cont-grid">
+          <div class="cont-item"><span class="cont-icon">🔬</span><div class="cont-info"><div class="name">통합과학 · 생명 시스템</div><div class="cont-bar"><div class="cont-bar-fill" style="width:62%"></div></div></div><span class="cont-pct">62%</span></div>
+          <div class="cont-item"><span class="cont-icon">📗</span><div class="cont-info"><div class="name">영어 · 단어</div><div class="cont-bar"><div class="cont-bar-fill" style="width:28%"></div></div></div><span class="cont-pct">28%</span></div>
+        </div>
+      </div>
+      <div class="rank-row"><div><p>이번 주 우리 반 <b>12위</b></p><div class="sub">한 칸만 더 올려보자</div></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+    </div>
+    <div class="bottom-tab">
+      <div class="tab-item on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>홈</span></div>
+      <div class="tab-item off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>학습</span></div>
+      <div class="tab-item off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>리포트</span></div>
+      <div class="tab-item off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>마이</span></div>
+    </div>
+
+    <div class="sheet-overlay" id="sheet-tp" onclick="closeSheetBg(event,'tp')">
+      <div class="sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-hd"><h3>과학 과목 선택</h3><button class="close" onclick="closeSheet('tp')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+        <div class="sheet-sub">내가 수강 중인 과목</div>
+        <div class="sheet-item on"><div class="sheet-icon">🔬</div><div class="sheet-info"><div class="nm">통합과학</div><div class="ds">고1 공통 · 현재 학습 중</div></div><div class="sheet-radio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+        <div class="sheet-item"><div class="sheet-icon">⚗️</div><div class="sheet-info"><div class="nm">화학Ⅰ</div><div class="ds">수능 선택 · 물질의 구조</div></div><div class="sheet-radio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+        <div class="sheet-item"><div class="sheet-icon">🌍</div><div class="sheet-info"><div class="nm">지구과학Ⅰ</div><div class="ds">수능 선택 · 지구와 우주</div></div><div class="sheet-radio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+        <hr class="sheet-divider">
+        <div class="sheet-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>수강 과목 추가하기</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ TABLET LANDSCAPE ════ -->
+<div id="tablet-landscape" class="device">
+  <div class="screen">
+    <div class="hdr">
+      <div class="hdr-top">
+        <div class="subj-row">
+          <button class="subj-btn on" onclick="openSheet('tl')">통합과학 <span class="chev">▾</span></button>
+          <button class="subj-btn">영어</button>
+          <button class="subj-btn">국어</button>
+        </div>
+        <button class="bell-btn" aria-label="알림"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="left-col">
+        <div class="greet"><h2 style="font-size:20px;">민서야, 7일째다</h2><p>이 흐름 아까우니까 오늘도 가자</p></div>
+        <div class="today-card state-a">
+          <div class="card-eyebrow indigo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>AI 코치가 골랐어</div>
+          <div class="card-title">산화·환원의 정의</div>
+          <div class="card-sub">집중 10문제</div>
+          <div class="stat-chips">
+            <span class="stat-chip neutral">달성 <span class="v">1%</span></span>
+            <span class="stat-chip neutral">예상 <span class="v">+25점</span></span>
+            <span class="stat-chip neutral">절약 <span class="v">35분</span></span>
+            <span class="stat-chip warn">취약 <span class="v">5개</span></span>
+          </div>
+          <div class="ment-box">이 유형 네 번 틀렸어. 오늘 끝내버리자</div>
+          <button class="cta-full"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>AI 맞춤 학습 시작 →</button>
+        </div>
+      </div>
+      <div class="right-col">
+        <div class="stat3">
+          <div class="stat3-card"><div class="val">🔥 7일</div><div class="lbl">연속 학습</div></div>
+          <div class="stat3-card"><div class="val">52%</div><div class="lbl">정답률</div></div>
+          <div class="stat3-card"><div class="val">155분</div><div class="lbl">절약</div></div>
+        </div>
+        <div class="effect-card" style="margin-bottom:0;">
+          <div class="effect-eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>AIDU 학습 효과</div>
+          <div class="effect-big">155분 절약</div>
+          <div class="effect-sub">이번 주 누적</div>
+          <div class="bar-row"><span class="bar-label">종이/펜</span><div class="bar-track"><div class="bar-fill gray" style="width:75%"></div></div><span class="bar-val">45분</span></div>
+          <div class="bar-row"><span class="bar-label">AI 학습</span><div class="bar-track"><div class="bar-fill indigo" style="width:60%"></div></div><span class="bar-val">41분</span></div>
+          <div class="effect-stats">
+            <div class="effect-stat"><div class="v green">-17개</div><div class="l">불필요</div></div>
+            <div class="effect-stat"><div class="v">72%</div><div class="l">목표달성</div></div>
+            <div class="effect-stat"><div class="v">x5.0</div><div class="l">학습효율</div></div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-hd"><h3>이어서 풀기</h3><a>전체보기</a></div>
+          <div class="cont-item"><span class="cont-icon">🔬</span><div class="cont-info"><div class="name">통합과학 · 생명 시스템</div><div class="cont-bar"><div class="cont-bar-fill" style="width:62%"></div></div></div><span class="cont-pct">62%</span></div>
+          <div class="cont-item"><span class="cont-icon">📗</span><div class="cont-info"><div class="name">영어 · 단어</div><div class="cont-bar"><div class="cont-bar-fill" style="width:28%"></div></div></div><span class="cont-pct">28%</span></div>
+        </div>
+        <div class="rank-row"><div><p>이번 주 우리 반 <b>12위</b></p><div class="sub">한 칸만 더 올려보자</div></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+      </div>
+    </div>
+    <div class="bottom-tab">
+      <div class="tab-item on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>홈</span></div>
+      <div class="tab-item off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>학습</span></div>
+      <div class="tab-item off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>리포트</span></div>
+      <div class="tab-item off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>마이</span></div>
+    </div>
+
+    <div class="sheet-overlay" id="sheet-tl" onclick="closeSheetBg(event,'tl')">
+      <div class="sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-hd"><h3>과학 과목 선택</h3><button class="close" onclick="closeSheet('tl')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+        <div class="sheet-sub">내가 수강 중인 과목</div>
+        <div class="sheet-item on"><div class="sheet-icon">🔬</div><div class="sheet-info"><div class="nm">통합과학</div><div class="ds">고1 공통 · 현재 학습 중</div></div><div class="sheet-radio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+        <div class="sheet-item"><div class="sheet-icon">⚗️</div><div class="sheet-info"><div class="nm">화학Ⅰ</div><div class="ds">수능 선택 · 물질의 구조</div></div><div class="sheet-radio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+        <div class="sheet-item"><div class="sheet-icon">🌍</div><div class="sheet-info"><div class="nm">지구과학Ⅰ</div><div class="ds">수능 선택 · 지구와 우주</div></div><div class="sheet-radio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+        <hr class="sheet-divider">
+        <div class="sheet-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>수강 과목 추가하기</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ WEB ════ -->
+<div id="web" class="device">
+  <div class="screen">
+    <nav class="top-nav">
+      <div class="top-nav-left">
+        <span class="logo">aidu</span>
+        <div class="subj-row">
+          <button class="subj-btn on" onclick="openSheet('web')">통합과학 <span class="chev">▾</span></button>
+          <button class="subj-btn">영어</button>
+          <button class="subj-btn">국어</button>
+        </div>
+      </div>
+      <div class="top-nav-right">
+        <button class="bell-btn" aria-label="알림"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+        <div class="nav-btn-group"><button>학습</button><button>리포트</button><button>마이</button></div>
+      </div>
+    </nav>
+    <div class="body">
+      <div class="col">
+        <div class="greet"><h2 style="font-size:18px;">민서야, 7일째다</h2><p>이 흐름 아까우니까 오늘도 가자</p></div>
+        <div class="today-card state-a" style="margin-bottom:0;">
+          <div class="card-eyebrow indigo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>AI 코치가 골랐어</div>
+          <div class="card-title">산화·환원의 정의</div>
+          <div class="card-sub">집중 10문제</div>
+          <div class="stat-chips">
+            <span class="stat-chip neutral">달성 <span class="v">1%</span></span>
+            <span class="stat-chip neutral">예상 <span class="v">+25점</span></span>
+            <span class="stat-chip neutral">절약 <span class="v">35분</span></span>
+            <span class="stat-chip warn">취약 <span class="v">5개</span></span>
+          </div>
+          <div class="ment-box">이 유형 네 번 틀렸어. 오늘 끝내버리자</div>
+          <button class="cta-full"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>AI 맞춤 학습 시작 →</button>
+        </div>
+      </div>
+      <div class="col">
+        <div class="stat3" style="margin-bottom:0;">
+          <div class="stat3-card"><div class="val">🔥 7일</div><div class="lbl">연속 학습</div></div>
+          <div class="stat3-card"><div class="val">52%</div><div class="lbl">정답률</div></div>
+          <div class="stat3-card"><div class="val">155분</div><div class="lbl">절약</div></div>
+        </div>
+        <div class="effect-card" style="margin-bottom:0;">
+          <div class="effect-eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>AIDU 학습 효과</div>
+          <div class="effect-big">155분 절약</div>
+          <div class="effect-sub">이번 주 누적</div>
+          <div class="bar-row"><span class="bar-label">종이/펜</span><div class="bar-track"><div class="bar-fill gray" style="width:75%"></div></div><span class="bar-val">45분</span></div>
+          <div class="bar-row"><span class="bar-label">AI 학습</span><div class="bar-track"><div class="bar-fill indigo" style="width:60%"></div></div><span class="bar-val">41분</span></div>
+          <div class="effect-stats">
+            <div class="effect-stat"><div class="v green">-17개</div><div class="l">불필요</div></div>
+            <div class="effect-stat"><div class="v">72%</div><div class="l">목표달성</div></div>
+            <div class="effect-stat"><div class="v">x5.0</div><div class="l">학습효율</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="section" style="margin-bottom:0;">
+          <div class="section-hd"><h3>이어서 풀기</h3><a>전체보기</a></div>
+          <div class="cont-item"><span class="cont-icon">🔬</span><div class="cont-info"><div class="name">통합과학 · 생명 시스템</div><div class="cont-bar"><div class="cont-bar-fill" style="width:62%"></div></div></div><span class="cont-pct">62%</span></div>
+          <div class="cont-item"><span class="cont-icon">📗</span><div class="cont-info"><div class="name">영어 · 단어</div><div class="cont-bar"><div class="cont-bar-fill" style="width:28%"></div></div></div><span class="cont-pct">28%</span></div>
+          <div class="cont-item"><span class="cont-icon">📘</span><div class="cont-info"><div class="name">국어 · 나의 학습 세트</div><div class="cont-bar"><div class="cont-bar-fill" style="width:0%"></div></div></div><span class="cont-pct">0%</span></div>
+        </div>
+        <div class="rank-row" style="margin-bottom:0;"><div><p>이번 주 우리 반 <b>12위</b></p><div class="sub">한 칸만 더 올려보자</div></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+      </div>
+    </div>
+
+    <div class="sheet-overlay" id="sheet-web" onclick="closeSheetBg(event,'web')">
+      <div class="sheet" style="max-width:480px; margin:0 auto; border-radius:20px;">
+        <div class="sheet-handle"></div>
+        <div class="sheet-hd"><h3>과학 과목 선택</h3><button class="close" onclick="closeSheet('web')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+        <div class="sheet-sub">내가 수강 중인 과목</div>
+        <div class="sheet-item on"><div class="sheet-icon">🔬</div><div class="sheet-info"><div class="nm">통합과학</div><div class="ds">고1 공통 · 현재 학습 중</div></div><div class="sheet-radio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+        <div class="sheet-item"><div class="sheet-icon">⚗️</div><div class="sheet-info"><div class="nm">화학Ⅰ</div><div class="ds">수능 선택 · 물질의 구조</div></div><div class="sheet-radio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+        <div class="sheet-item"><div class="sheet-icon">🌍</div><div class="sheet-info"><div class="nm">지구과학Ⅰ</div><div class="ds">수능 선택 · 지구와 우주</div></div><div class="sheet-radio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+        <hr class="sheet-divider">
+        <div class="sheet-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>수강 과목 추가하기</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function showDevice(id, btn) {
+  document.querySelectorAll('.device').forEach(d => d.classList.remove('show'));
+  document.querySelectorAll('.view-tabs button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('show');
+  btn.classList.add('active');
+}
+function showState(prefix, btn, state) {
+  ['a','b','c'].forEach(s => {
+    const el = document.getElementById(prefix + '-' + s);
+    if (el) el.classList.remove('show');
+  });
+  document.querySelectorAll('#mobile .state-tab-btn').forEach(b => b.classList.remove('active'));
+  const target = document.getElementById(prefix + '-' + state);
+  if (target) target.classList.add('show');
+  btn.classList.add('active');
+}
+function openSheet(prefix) {
+  document.getElementById('sheet-' + prefix).classList.add('show');
+}
+function closeSheet(prefix) {
+  document.getElementById('sheet-' + prefix).classList.remove('show');
+}
+function closeSheetBg(e, prefix) {
+  if (e.target === e.currentTarget) closeSheet(prefix);
+}
+</script>
+
+</body>
+</html>

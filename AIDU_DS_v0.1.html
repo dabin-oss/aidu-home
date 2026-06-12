@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AIDU Design System · v0.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   AIDU DESIGN TOKENS — 그대로 피그마에
+   ══════════════════════════════════════ */
+
+/* PRIMITIVE */
+:root {
+  /* Indigo */
+  --indigo-700: #3A4393;
+  --indigo-500: #4F5BD5;
+  --indigo-300: #8B95E8;
+  --indigo-200: #AEB5F0;
+
+  /* Neutral */
+  --neutral-950: #0A0B14;
+  --neutral-900: #0F1120;
+  --neutral-850: #131626;
+  --neutral-800: #15182A;
+  --neutral-750: #1B1F38;
+  --neutral-700: #262A45;
+  --neutral-400: #676C88;
+  --neutral-300: #9DA2BC;
+  --neutral-50:  #F1F3FA;
+
+  /* Subject */
+  --subject-science:    #D4638F;
+  --subject-science-bg: #2A1830;
+  --subject-korean:     #9B63B8;
+  --subject-korean-bg:  #241830;
+  --subject-english:    #5AC8FA;
+  --subject-english-bg: #182530;
+
+  /* Functional */
+  --green-500: #16A34A;
+  --amber-500: #F59E0B;
+  --red-500:   #DC2626;
+
+  /* SEMANTIC — 화면에서 사용하는 토큰 */
+  --bg-base:           var(--neutral-950);
+  --bg-surface:        var(--neutral-850);
+  --bg-surface-raised: var(--neutral-800);
+  --bg-surface-sunken: var(--neutral-900);
+  --bg-inset:          var(--neutral-950);
+  --bg-badge:          var(--neutral-750);
+
+  --brand-primary: var(--indigo-500);
+  --brand-deep:    var(--indigo-700);
+  --brand-light:   var(--indigo-300);
+  --brand-lilac:   var(--indigo-200);
+
+  --text-primary:   var(--neutral-50);
+  --text-secondary: var(--neutral-300);
+  --text-tertiary:  var(--neutral-400);
+  --text-on-brand:  #FFFFFF;
+
+  --border-default: var(--neutral-700);
+  --border-brand:   var(--indigo-500);
+
+  /* Radius */
+  --radius-sm:     9px;
+  --radius-md:     11px;
+  --radius-lg:     12px;
+  --radius-xl:     13px;
+  --radius-2xl:    14px;
+  --radius-3xl:    20px;
+  --radius-device: 26px;
+
+  /* Radius semantic */
+  --radius-card-hero: var(--radius-3xl);
+  --radius-card:      var(--radius-2xl);
+  --radius-inner:     var(--radius-lg);
+  --radius-button:    var(--radius-xl);
+  --radius-icon:      var(--radius-md);
+  --radius-badge:     var(--radius-sm);
+
+  /* Spacing primitive */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 22px;
+  --space-7: 9px;
+
+  /* Spacing semantic */
+  --pad-screen-card: var(--space-4);
+  --pad-screen-text: var(--space-5);
+  --gap-section:     var(--space-6);
+  --gap-label:       11px;
+  --gap-row:         var(--space-7);
+  --gap-inline:      var(--space-3);
+
+  /* Typography */
+  --font-base: 'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+}
+
+/* ══ 전역 리셋 ══ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font-base);
+  background: #080910;
+  color: var(--text-primary);
+  line-height: 1.5;
+  padding: 48px 40px 80px;
+  min-width: 900px;
+}
+
+/* ══ 레이아웃 ══ */
+.ds-page { max-width: 1160px; margin: 0 auto; display: flex; flex-direction: column; gap: 72px; }
+
+/* ══ 섹션 헤더 ══ */
+.sec-eyebrow {
+  font-size: 10px; font-weight: 500;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--brand-light);
+  margin-bottom: 6px;
+}
+.sec-title {
+  font-size: 22px; font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.sec-desc {
+  font-size: 13px; color: var(--text-tertiary);
+  line-height: 1.7;
+}
+.sec-hd { margin-bottom: 28px; }
+
+/* ══ 구분선 ══ */
+.divider {
+  border: none;
+  border-top: 0.5px solid var(--border-default);
+  margin: 0;
+}
+
+/* ══ 토큰 라벨 공통 ══ */
+.token-name {
+  font-size: 10px; font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.5px;
+  font-family: 'Courier New', monospace;
+}
+.token-val {
+  font-size: 11px; color: var(--text-secondary);
+  font-family: 'Courier New', monospace;
+}
+.token-desc {
+  font-size: 11px; color: var(--text-tertiary);
+}
+
+/* ═══════════════════════════════════════════
+   PAGE HEADER
+═══════════════════════════════════════════ */
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-bottom: 32px;
+  border-bottom: 0.5px solid var(--border-default);
+}
+.logo-mark {
+  font-size: 13px; font-weight: 500;
+  color: var(--brand-light);
+  letter-spacing: 3px;
+}
+.page-title {
+  font-size: 36px; font-weight: 500;
+  color: var(--text-primary);
+  margin-top: 8px;
+  line-height: 1.1;
+}
+.page-tagline {
+  font-size: 13px; color: var(--text-tertiary);
+  margin-top: 6px;
+}
+.page-meta {
+  text-align: right;
+}
+.page-meta .version {
+  font-size: 11px; font-weight: 500;
+  color: var(--brand-primary);
+  background: rgba(79,91,213,.15);
+  border: 0.5px solid var(--border-brand);
+  padding: 4px 10px; border-radius: 6px;
+  font-family: monospace;
+}
+.page-meta .notice {
+  font-size: 11px; color: var(--text-tertiary);
+  margin-top: 8px; max-width: 260px;
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════
+   토큰 구조 원칙
+═══════════════════════════════════════════ */
+.principle-flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--bg-surface);
+  border-radius: var(--radius-card);
+  border: 0.5px solid var(--border-default);
+  overflow: hidden;
+}
+.pf-step {
+  flex: 1;
+  padding: 20px 22px;
+  position: relative;
+}
+.pf-step + .pf-step::before {
+  content: '→';
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  font-size: 16px;
+}
+.pf-step .label {
+  font-size: 10px; font-weight: 500;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--brand-light);
+  margin-bottom: 6px;
+}
+.pf-step .code {
+  font-size: 13px;
+  font-family: 'Courier New', monospace;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.pf-step .sub {
+  font-size: 11px; color: var(--text-tertiary);
+  margin-top: 3px;
+}
+.pf-step.active { background: rgba(79,91,213,.08); }
+
+.principle-rules {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+.rule-card {
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border-default);
+  border-radius: var(--radius-card);
+  padding: 14px 16px;
+}
+.rule-card .rule-label {
+  font-size: 11px; font-weight: 500;
+  color: var(--brand-light);
+  margin-bottom: 5px;
+}
+.rule-card p {
+  font-size: 12px; color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* ═══════════════════════════════════════════
+   1. COLOR — Primitive 팔레트
+═══════════════════════════════════════════ */
+.color-group { margin-bottom: 32px; }
+.color-group-label {
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 12px;
+}
+
+.swatch-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.swatch-chip {
+  width: 80px; height: 56px;
+  border-radius: var(--radius-md);
+  border: 0.5px solid rgba(255,255,255,.06);
+  flex-shrink: 0;
+}
+.swatch-chip.wide { width: 100px; }
+.swatch-info { }
+.swatch-info .sn { font-size: 10px; font-weight: 500; color: var(--text-secondary); font-family: monospace; }
+.swatch-info .sv { font-size: 10px; color: var(--text-tertiary); font-family: monospace; }
+.swatch-info .sd { font-size: 10px; color: var(--text-tertiary); margin-top: 1px; }
+
+/* neutral 스케일 */
+.neutral-scale {
+  display: flex;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  border: 0.5px solid var(--border-default);
+}
+.ns-chip {
+  flex: 1;
+  height: 48px;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 6px 5px;
+  position: relative;
+}
+.ns-chip .ns-label {
+  font-size: 9px;
+  font-family: monospace;
+  opacity: .7;
+  white-space: nowrap;
+}
+
+/* subject 카드 */
+.subject-chips {
+  display: flex; gap: 12px;
+}
+.subject-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.subj-icon-wrap {
+  width: 80px; height: 80px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.5px solid rgba(255,255,255,.07);
+}
+.subj-icon-inner {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════
+   1-2. Semantic — 컬러 테이블
+═══════════════════════════════════════════ */
+.semantic-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  font-size: 12px;
+}
+.semantic-table thead tr {
+  background: var(--bg-surface-raised);
+}
+.semantic-table thead th {
+  padding: 11px 14px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  letter-spacing: .5px;
+  border-bottom: 0.5px solid var(--border-default);
+}
+.semantic-table tbody tr {
+  background: var(--bg-surface);
+  border-bottom: 0.5px solid var(--border-default);
+  transition: background .1s;
+}
+.semantic-table tbody tr:last-child { border-bottom: none; }
+.semantic-table tbody tr:hover { background: var(--bg-surface-raised); }
+.semantic-table td { padding: 11px 14px; color: var(--text-secondary); }
+.semantic-table .td-name { font-family: monospace; color: var(--brand-light); font-size: 12px; }
+.semantic-table .td-arrow { color: var(--text-tertiary); padding: 0 4px; }
+.semantic-table .td-prim { font-family: monospace; color: var(--text-primary); font-size: 12px; }
+.semantic-table .td-desc { color: var(--text-tertiary); font-size: 11px; }
+.dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+.sem-group-label {
+  font-size: 10px; font-weight: 500;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin: 20px 0 8px;
+}
+
+/* ═══════════════════════════════════════════
+   2. TYPOGRAPHY
+═══════════════════════════════════════════ */
+.type-scale { display: flex; flex-direction: column; gap: 0; }
+.type-row {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  padding: 16px 20px;
+  background: var(--bg-surface);
+  border-bottom: 0.5px solid var(--border-default);
+}
+.type-row:first-child { border-radius: var(--radius-card) var(--radius-card) 0 0; }
+.type-row:last-child { border-radius: 0 0 var(--radius-card) var(--radius-card); border-bottom: none; }
+.type-meta {
+  width: 160px;
+  flex-shrink: 0;
+}
+.type-meta .tm-name {
+  font-size: 11px; font-weight: 500;
+  color: var(--brand-light);
+  font-family: monospace;
+}
+.type-meta .tm-spec {
+  font-size: 10px; color: var(--text-tertiary);
+  margin-top: 2px; font-family: monospace;
+}
+.type-sample { flex: 1; min-width: 0; }
+.type-use {
+  font-size: 11px; color: var(--text-tertiary);
+  width: 200px; flex-shrink: 0; text-align: right;
+}
+
+/* ═══════════════════════════════════════════
+   3. SPACING
+═══════════════════════════════════════════ */
+.spacing-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.spacing-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  background: var(--bg-surface);
+  border-bottom: 0.5px solid var(--border-default);
+}
+.spacing-row:first-child { border-radius: var(--radius-card) var(--radius-card) 0 0; }
+.spacing-row:last-child { border-radius: 0 0 var(--radius-card) var(--radius-card); border-bottom: none; }
+.sp-name { width: 100px; font-family: monospace; font-size: 11px; color: var(--brand-light); }
+.sp-val { width: 50px; font-family: monospace; font-size: 11px; color: var(--text-secondary); }
+.sp-bar-wrap { flex: 1; }
+.sp-bar {
+  height: 6px;
+  background: var(--brand-primary);
+  border-radius: 3px;
+  opacity: .7;
+}
+.sp-sem { width: 200px; font-family: monospace; font-size: 10px; color: var(--text-tertiary); }
+.sp-desc { width: 200px; font-size: 11px; color: var(--text-tertiary); }
+
+/* ═══════════════════════════════════════════
+   4. RADIUS
+═══════════════════════════════════════════ */
+.radius-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+.radius-item {
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border-default);
+  padding: 16px 12px 14px;
+  border-radius: var(--radius-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.radius-box {
+  width: 48px; height: 48px;
+  background: rgba(79,91,213,.18);
+  border: 1px solid var(--brand-primary);
+}
+
+/* ═══════════════════════════════════════════
+   5. COMPONENTS
+═══════════════════════════════════════════ */
+.comp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.comp-card {
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border-default);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+.comp-card-hd {
+  padding: 14px 16px 10px;
+  border-bottom: 0.5px solid var(--border-default);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.comp-name {
+  font-size: 11px; font-weight: 500;
+  color: var(--brand-light);
+  font-family: monospace;
+}
+.comp-body { padding: 18px 16px; }
+.comp-token-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 0.5px solid var(--border-default);
+}
+.comp-token-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.comp-token-row .ct-prop { font-size: 10px; color: var(--text-tertiary); }
+.comp-token-row .ct-val { font-size: 10px; font-family: monospace; color: var(--text-secondary); }
+
+/* Card Hero 미리보기 */
+.preview-hero-card {
+  background: var(--bg-surface-raised);
+  border: 0.5px solid var(--brand-primary);
+  border-radius: var(--radius-card-hero);
+  padding: 14px;
+}
+.hero-eyebrow {
+  font-size: 10px; font-weight: 500;
+  color: var(--brand-light);
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 4px;
+}
+.hero-title {
+  font-size: 18px; font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.25;
+  margin-bottom: 2px;
+}
+.hero-sub { font-size: 11px; color: var(--text-secondary); margin-bottom: 10px; }
+.hero-chips { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+.hero-chip {
+  padding: 4px 9px;
+  background: var(--bg-inset);
+  border-radius: 7px;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+.hero-chip.danger { background: rgba(220,38,38,.15); color: #f87171; }
+.hero-ment {
+  font-size: 11px; color: var(--text-secondary);
+  background: var(--bg-inset);
+  border-radius: var(--radius-inner);
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.hero-btn {
+  width: 100%;
+  background: var(--brand-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-button);
+  padding: 11px;
+  font-size: 12px; font-weight: 500;
+  font-family: var(--font-base);
+  cursor: pointer;
+  text-align: center;
+}
+
+/* Stat Card 미리보기 */
+.preview-stat {
+  background: var(--bg-surface-raised);
+  border-radius: var(--radius-card);
+  padding: 12px 14px;
+  text-align: center;
+}
+.stat-val {
+  font-size: 20px; font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1;
+}
+.stat-val.highlight { color: var(--brand-light); }
+.stat-lbl {
+  font-size: 10px; color: var(--text-tertiary);
+  margin-top: 4px;
+}
+.stat-trio { display: flex; gap: 7px; }
+
+/* Row Subject 미리보기 */
+.preview-row {
+  background: var(--bg-surface-raised);
+  border-radius: var(--radius-card);
+  padding: 11px 13px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 7px;
+}
+.row-icon {
+  width: 38px; height: 38px;
+  border-radius: var(--radius-icon);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+.row-info { flex: 1; min-width: 0; }
+.row-name { font-size: 12px; font-weight: 500; color: var(--text-primary); margin-bottom: 5px; }
+.row-track {
+  height: 4px;
+  background: var(--bg-inset);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.row-fill { height: 100%; border-radius: 2px; }
+.row-pct { font-size: 10px; color: var(--text-secondary); flex-shrink: 0; }
+
+/* Button Primary 미리보기 */
+.preview-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--brand-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-button);
+  padding: 13px 20px;
+  font-size: 14px; font-weight: 500;
+  font-family: var(--font-base);
+  cursor: pointer;
+  width: 100%;
+}
+
+/* Ranking 미리보기 */
+.preview-rank {
+  background: var(--bg-surface-sunken);
+  border-radius: var(--radius-button);
+  padding: 11px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.rank-text { font-size: 12px; color: var(--text-secondary); }
+.rank-text b { color: var(--brand-light); font-weight: 500; }
+.rank-sub { font-size: 10px; color: var(--text-tertiary); margin-top: 2px; }
+
+/* ═══════════════════════════════════════════
+   6. VOICE 토큰
+═══════════════════════════════════════════ */
+.voice-grid {
+  display: flex; flex-direction: column; gap: 0;
+}
+.voice-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 1fr 1fr;
+  gap: 0;
+  background: var(--bg-surface);
+  border-bottom: 0.5px solid var(--border-default);
+}
+.voice-row:first-child { border-radius: var(--radius-card) var(--radius-card) 0 0; }
+.voice-row:last-child { border-radius: 0 0 var(--radius-card) var(--radius-card); border-bottom: none; }
+.voice-row.head { background: var(--bg-surface-raised); }
+.voice-cell {
+  padding: 11px 14px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  border-right: 0.5px solid var(--border-default);
+}
+.voice-cell:last-child { border-right: none; }
+.voice-cell.th { font-size: 10px; font-weight: 500; color: var(--text-tertiary); letter-spacing: .5px; }
+.voice-cell.situation { color: var(--text-primary); font-weight: 500; font-size: 12px; }
+.voice-cell.bad { color: #f87171; }
+.voice-cell.good { color: #86efac; }
+.voice-cell.rule { font-family: monospace; font-size: 10px; color: var(--text-tertiary); }
+
+/* ═══════════════════════════════════════════
+   7. NAMING RULES
+═══════════════════════════════════════════ */
+.naming-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.naming-card {
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border-default);
+  border-radius: var(--radius-card);
+  padding: 16px 18px;
+}
+.naming-card .nc-label {
+  font-size: 10px; font-weight: 500;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 10px;
+}
+.naming-card .nc-ex {
+  font-family: monospace; font-size: 12px;
+  color: var(--brand-light);
+  margin-bottom: 4px;
+}
+.naming-card .nc-desc {
+  font-size: 11px; color: var(--text-tertiary);
+  line-height: 1.6;
+}
+.naming-card.danger {
+  border-color: rgba(220,38,38,.35);
+  background: rgba(220,38,38,.05);
+}
+.naming-card.danger .nc-label { color: #f87171; }
+.naming-card.danger .nc-ex { color: #fca5a5; }
+
+/* section splitter */
+.section-splitter {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-splitter .sp-line { flex: 1; border-top: 0.5px solid var(--border-default); }
+.section-splitter .sp-num {
+  font-size: 10px; font-weight: 500;
+  letter-spacing: 2px;
+  color: var(--brand-light);
+  font-family: monospace;
+  white-space: nowrap;
+}
+
+/* two-col layout */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+</style>
+</head>
+<body>
+
+<div class="ds-page">
+
+  <!-- ══ PAGE HEADER ══ -->
+  <header class="page-header">
+    <div>
+      <div class="logo-mark">AIDU</div>
+      <div class="page-title">Design System</div>
+      <div class="page-tagline">진지·신뢰형 프리미엄 학습관 · 딥 인디고</div>
+    </div>
+    <div class="page-meta">
+      <div class="version">v0.1 · Style Guide</div>
+      <div class="notice">학생 홈(세로)에서 추출한 1차 토큰 세트.<br>화면이 늘면서 확장되는 살아있는 문서.<br>지금은 "확정"이 아니라 "기반".</div>
+    </div>
+  </header>
+
+  <!-- ══ 토큰 구조 원칙 ══ -->
+  <section>
+    <div class="sec-hd">
+      <div class="sec-eyebrow">Token Architecture</div>
+      <div class="sec-title">토큰 구조 원칙</div>
+      <div class="sec-desc">2단 구조를 따른다. 화면을 그릴 때는 semantic만 사용한다. primitive를 직접 쓰지 않는다.</div>
+    </div>
+
+    <div class="principle-flow">
+      <div class="pf-step">
+        <div class="label">01 · Primitive</div>
+        <div class="code">indigo-500 = #4F5BD5</div>
+        <div class="sub">순수한 값. 의미 없음. 팔레트 그 자체.</div>
+      </div>
+      <div class="pf-step active">
+        <div class="label">02 · Semantic</div>
+        <div class="code">brand-primary = indigo-500</div>
+        <div class="sub">어디에 쓰는지 의미를 담은 별칭.</div>
+      </div>
+      <div class="pf-step">
+        <div class="label">03 · Component</div>
+        <div class="code">버튼 배경 = brand-primary</div>
+        <div class="sub">화면에서 실제로 사용.</div>
+      </div>
+    </div>
+
+    <div class="principle-rules">
+      <div class="rule-card">
+        <div class="rule-label">Figma Variables</div>
+        <p>Primitive는 _primitive 컬렉션, Semantic은 semantic 컬렉션으로 분리. Semantic 베리어블의 값을 Primitive 베리어블에 alias(별칭 연결)로 묶는다.</p>
+      </div>
+      <div class="rule-card">
+        <div class="rule-label">확장성</div>
+        <p>브랜드 색을 바꿔도 Primitive 한 곳만 고치면 모든 화면이 따라온다. Semantic → Component 연쇄 갱신.</p>
+      </div>
+      <div class="rule-card">
+        <div class="rule-label">금지 사항</div>
+        <p>화면에서 Primitive 직접 사용 금지. 두께 600·700 사용 금지 (차분·프리미엄 톤). 과목색을 브랜드색으로 대체 금지.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ══ 1. COLOR ══ -->
+  <section>
+    <div class="section-splitter"><div class="sp-line"></div><div class="sp-num">01 · COLOR</div><div class="sp-line"></div></div>
+    <div class="sec-hd" style="margin-top:24px;">
+      <div class="sec-title">컬러</div>
+      <div class="sec-desc">Indigo(브랜드) · Neutral(배경/텍스트) · Subject(과목색) · Functional(상태)</div>
+    </div>
+
+    <!-- 1-1 Primitive -->
+    <div class="color-group">
+      <div class="color-group-label">Primitive — Indigo (브랜드 핵심)</div>
+      <div class="swatch-row">
+        <div class="swatch">
+          <div class="swatch-chip wide" style="background:#3A4393;"></div>
+          <div class="swatch-info">
+            <div class="sn">indigo-700</div>
+            <div class="sv">#3A4393</div>
+            <div class="sd">deep</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip wide" style="background:#4F5BD5; border-color:rgba(255,255,255,.2);"></div>
+          <div class="swatch-info">
+            <div class="sn">indigo-500</div>
+            <div class="sv">#4F5BD5</div>
+            <div class="sd">base · 브랜드 기준색</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip wide" style="background:#8B95E8;"></div>
+          <div class="swatch-info">
+            <div class="sn">indigo-300</div>
+            <div class="sv">#8B95E8</div>
+            <div class="sd">light</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-chip wide" style="background:#AEB5F0;"></div>
+          <div class="swatch-info">
+            <div class="sn">indigo-200</div>
+            <div class="sv">#AEB5F0</div>
+            <div class="sd">lilac</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="color-group">
+      <div class="color-group-label">Primitive — Neutral (배경·텍스트, 푸른 기 도는 다크)</div>
+      <div class="neutral-scale">
+        <div class="ns-chip" style="background:#0A0B14; flex:2;">
+          <span class="ns-label" style="color:rgba(255,255,255,.35);">950 · #0A0B14</span>
+        </div>
+        <div class="ns-chip" style="background:#0F1120; flex:1.5;">
+          <span class="ns-label" style="color:rgba(255,255,255,.3);">900</span>
+        </div>
+        <div class="ns-chip" style="background:#131626; flex:1.5;">
+          <span class="ns-label" style="color:rgba(255,255,255,.3);">850</span>
+        </div>
+        <div class="ns-chip" style="background:#15182A; flex:1.5;">
+          <span class="ns-label" style="color:rgba(255,255,255,.3);">800</span>
+        </div>
+        <div class="ns-chip" style="background:#1B1F38; flex:1.5;">
+          <span class="ns-label" style="color:rgba(255,255,255,.3);">750</span>
+        </div>
+        <div class="ns-chip" style="background:#262A45; flex:1.5;">
+          <span class="ns-label" style="color:rgba(255,255,255,.28);">700</span>
+        </div>
+        <div class="ns-chip" style="background:#676C88; flex:2;">
+          <span class="ns-label" style="color:rgba(255,255,255,.5);">400</span>
+        </div>
+        <div class="ns-chip" style="background:#9DA2BC; flex:2;">
+          <span class="ns-label" style="color:rgba(255,255,255,.6);">300</span>
+        </div>
+        <div class="ns-chip" style="background:#F1F3FA; flex:2;">
+          <span class="ns-label" style="color:rgba(0,0,0,.4);">50</span>
+        </div>
+      </div>
+      <div style="display:flex; gap:12px; margin-top:8px;">
+        <span style="font-size:10px; color:var(--text-tertiary); font-family:monospace;">950 #0A0B14</span>
+        <span style="font-size:10px; color:var(--text-tertiary); font-family:monospace;">900 #0F1120</span>
+        <span style="font-size:10px; color:var(--text-tertiary); font-family:monospace;">850 #131626</span>
+        <span style="font-size:10px; color:var(--text-tertiary); font-family:monospace;">800 #15182A</span>
+        <span style="font-size:10px; color:var(--text-tertiary); font-family:monospace;">750 #1B1F38</span>
+        <span style="font-size:10px; color:var(--text-tertiary); font-family:monospace;">700 #262A45</span>
+        <span style="font-size:10px; color:var(--text-tertiary); font-family:monospace;">400 #676C88</span>
+        <span style="font-size:10px; color:var(--text-tertiary); font-family:monospace;">300 #9DA2BC</span>
+        <span style="font-size:10px; color:var(--text-tertiary); font-family:monospace;">50 #F1F3FA</span>
+      </div>
+    </div>
+
+    <div class="color-group">
+      <div class="color-group-label">Primitive — Subject (과목색 · 브랜드와 독립된 별도 팔레트)</div>
+      <div class="subject-chips">
+        <div class="subject-chip">
+          <div class="subj-icon-wrap" style="background:#2A1830;">
+            <div class="subj-icon-inner" style="background:#D4638F;">
+              <span style="color:white; font-size:13px; font-weight:500;">과</span>
+            </div>
+          </div>
+          <div class="swatch-info">
+            <div class="sn">subject-science</div>
+            <div class="sv">#D4638F</div>
+            <div class="sd">science-bg #2A1830</div>
+          </div>
+        </div>
+        <div class="subject-chip">
+          <div class="subj-icon-wrap" style="background:#241830;">
+            <div class="subj-icon-inner" style="background:#9B63B8;">
+              <span style="color:white; font-size:13px; font-weight:500;">국</span>
+            </div>
+          </div>
+          <div class="swatch-info">
+            <div class="sn">subject-korean</div>
+            <div class="sv">#9B63B8</div>
+            <div class="sd">korean-bg #241830</div>
+          </div>
+        </div>
+        <div class="subject-chip">
+          <div class="subj-icon-wrap" style="background:#182530;">
+            <div class="subj-icon-inner" style="background:#5AC8FA;">
+              <span style="color:#0a1520; font-size:13px; font-weight:500;">영</span>
+            </div>
+          </div>
+          <div class="swatch-info">
+            <div class="sn">subject-english</div>
+            <div class="sv">#5AC8FA</div>
+            <div class="sd">english-bg #182530</div>
+          </div>
+        </div>
+        <div class="subject-chip" style="margin-left:24px;">
+          <div class="subj-icon-wrap" style="background:rgba(22,163,74,.12);">
+            <div class="subj-icon-inner" style="background:#16A34A;">
+              <span style="color:white; font-size:10px; font-weight:500;">OK</span>
+            </div>
+          </div>
+          <div class="swatch-info">
+            <div class="sn">green-500</div>
+            <div class="sv">#16A34A</div>
+            <div class="sd">success</div>
+          </div>
+        </div>
+        <div class="subject-chip">
+          <div class="subj-icon-wrap" style="background:rgba(245,158,11,.1);">
+            <div class="subj-icon-inner" style="background:#F59E0B;">
+              <span style="color:#1a0f00; font-size:10px; font-weight:500;">!</span>
+            </div>
+          </div>
+          <div class="swatch-info">
+            <div class="sn">amber-500</div>
+            <div class="sv">#F59E0B</div>
+            <div class="sd">warning</div>
+          </div>
+        </div>
+        <div class="subject-chip">
+          <div class="subj-icon-wrap" style="background:rgba(220,38,38,.1);">
+            <div class="subj-icon-inner" style="background:#DC2626;">
+              <span style="color:white; font-size:10px; font-weight:500;">✕</span>
+            </div>
+          </div>
+          <div class="swatch-info">
+            <div class="sn">red-500</div>
+            <div class="sv">#DC2626</div>
+            <div class="sd">error</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1-2 Semantic -->
+    <div style="margin-top:32px;">
+      <div class="color-group-label">Semantic — 배경 (bg-*)</div>
+      <table class="semantic-table">
+        <thead><tr>
+          <th>semantic</th><th></th><th>primitive</th><th>HEX</th><th>용도</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="td-name">bg-base</td><td class="td-arrow">→</td><td class="td-prim">neutral-950</td><td><span class="dot" style="background:#0A0B14;border:0.5px solid #262A45;"></span><span class="token-val">#0A0B14</span></td><td class="td-desc">화면 최하단</td></tr>
+          <tr><td class="td-name">bg-surface</td><td class="td-arrow">→</td><td class="td-prim">neutral-850</td><td><span class="dot" style="background:#131626;"></span><span class="token-val">#131626</span></td><td class="td-desc">기본 카드</td></tr>
+          <tr><td class="td-name">bg-surface-raised</td><td class="td-arrow">→</td><td class="td-prim">neutral-800</td><td><span class="dot" style="background:#15182A;"></span><span class="token-val">#15182A</span></td><td class="td-desc">강조 카드 내부</td></tr>
+          <tr><td class="td-name">bg-surface-sunken</td><td class="td-arrow">→</td><td class="td-prim">neutral-900</td><td><span class="dot" style="background:#0F1120;border:0.5px solid #262A45;"></span><span class="token-val">#0F1120</span></td><td class="td-desc">가라앉힌 카드 (랭킹)</td></tr>
+          <tr><td class="td-name">bg-inset</td><td class="td-arrow">→</td><td class="td-prim">neutral-950</td><td><span class="dot" style="background:#0A0B14;border:0.5px solid #262A45;"></span><span class="token-val">#0A0B14</span></td><td class="td-desc">카드 안 더 깊은 영역</td></tr>
+          <tr><td class="td-name">bg-badge</td><td class="td-arrow">→</td><td class="td-prim">neutral-750</td><td><span class="dot" style="background:#1B1F38;"></span><span class="token-val">#1B1F38</span></td><td class="td-desc">로고·AI 아이콘 배경</td></tr>
+        </tbody>
+      </table>
+
+      <div class="color-group-label" style="margin-top:20px;">Semantic — 브랜드 (brand-*)</div>
+      <table class="semantic-table">
+        <thead><tr><th>semantic</th><th></th><th>primitive</th><th>HEX</th><th>용도</th></tr></thead>
+        <tbody>
+          <tr><td class="td-name">brand-primary</td><td class="td-arrow">→</td><td class="td-prim">indigo-500</td><td><span class="dot" style="background:#4F5BD5;"></span><span class="token-val">#4F5BD5</span></td><td class="td-desc">메인 버튼, 강조 보더, 활성 아이콘</td></tr>
+          <tr><td class="td-name">brand-deep</td><td class="td-arrow">→</td><td class="td-prim">indigo-700</td><td><span class="dot" style="background:#3A4393;"></span><span class="token-val">#3A4393</span></td><td class="td-desc">보조 강조</td></tr>
+          <tr><td class="td-name">brand-light</td><td class="td-arrow">→</td><td class="td-prim">indigo-300</td><td><span class="dot" style="background:#8B95E8;"></span><span class="token-val">#8B95E8</span></td><td class="td-desc">강조 텍스트, 수치 하이라이트</td></tr>
+          <tr><td class="td-name">brand-lilac</td><td class="td-arrow">→</td><td class="td-prim">indigo-200</td><td><span class="dot" style="background:#AEB5F0;"></span><span class="token-val">#AEB5F0</span></td><td class="td-desc">밝은 강조 (대체)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="color-group-label" style="margin-top:20px;">Semantic — 텍스트 (text-*) · 보더 (border-*)</div>
+      <table class="semantic-table">
+        <thead><tr><th>semantic</th><th></th><th>primitive</th><th>HEX</th><th>용도</th></tr></thead>
+        <tbody>
+          <tr><td class="td-name">text-primary</td><td class="td-arrow">→</td><td class="td-prim">neutral-50</td><td><span class="dot" style="background:#F1F3FA;"></span><span class="token-val">#F1F3FA</span></td><td class="td-desc">제목, 카드 핵심</td></tr>
+          <tr><td class="td-name">text-secondary</td><td class="td-arrow">→</td><td class="td-prim">neutral-300</td><td><span class="dot" style="background:#9DA2BC;"></span><span class="token-val">#9DA2BC</span></td><td class="td-desc">본문, 멘트</td></tr>
+          <tr><td class="td-name">text-tertiary</td><td class="td-arrow">→</td><td class="td-prim">neutral-400</td><td><span class="dot" style="background:#676C88;"></span><span class="token-val">#676C88</span></td><td class="td-desc">라벨, 단위, 비활성</td></tr>
+          <tr><td class="td-name">text-on-brand</td><td class="td-arrow">→</td><td class="td-prim">—</td><td><span class="dot" style="background:#fff;border:0.5px solid #262A45;"></span><span class="token-val">#FFFFFF</span></td><td class="td-desc">브랜드 버튼 위 텍스트</td></tr>
+          <tr><td class="td-name">border-default</td><td class="td-arrow">→</td><td class="td-prim">neutral-700</td><td><span class="dot" style="background:#262A45;"></span><span class="token-val">#262A45</span></td><td class="td-desc">0.5px · 외곽선, 구분선</td></tr>
+          <tr><td class="td-name">border-brand</td><td class="td-arrow">→</td><td class="td-prim">indigo-500</td><td><span class="dot" style="background:#4F5BD5;"></span><span class="token-val">#4F5BD5</span></td><td class="td-desc">0.5px · 강조 카드 보더</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ══ 2. TYPOGRAPHY ══ -->
+  <section>
+    <div class="section-splitter"><div class="sp-line"></div><div class="sp-num">02 · TYPOGRAPHY</div><div class="sp-line"></div></div>
+    <div class="sec-hd" style="margin-top:24px;">
+      <div class="sec-title">타이포그래피</div>
+      <div class="sec-desc">폰트 Pretendard · 두께는 400/500 두 가지만 · 600·700 사용 금지 (차분·프리미엄 톤)</div>
+    </div>
+
+    <div class="type-scale">
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="tm-name">display</div>
+          <div class="tm-spec">24px / 500 / 135%</div>
+        </div>
+        <div class="type-sample">
+          <span style="font-size:24px; font-weight:500; color:var(--text-primary); line-height:1.35;">화학 결합 집중</span>
+        </div>
+        <div class="type-use">오늘의 학습 핵심 문구</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="tm-name">title</div>
+          <div class="tm-spec">21px / 500 / 140%</div>
+        </div>
+        <div class="type-sample">
+          <span style="font-size:21px; font-weight:500; color:var(--text-primary); line-height:1.4;">민서야, 7일째다</span>
+        </div>
+        <div class="type-use">인사말</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="tm-name">value</div>
+          <div class="tm-spec">22px / 500 / 100%</div>
+        </div>
+        <div class="type-sample">
+          <span style="font-size:22px; font-weight:500; color:var(--brand-light); line-height:1;">72%</span>
+        </div>
+        <div class="type-use">지표 수치 · brand-light</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="tm-name">body</div>
+          <div class="tm-spec">15px / 400 / 150%</div>
+        </div>
+        <div class="type-sample">
+          <span style="font-size:15px; font-weight:400; color:var(--text-primary); line-height:1.5;">하던 거 이어서 풀자</span>
+        </div>
+        <div class="type-use">과목명, 카드 1차 텍스트</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="tm-name">body-button</div>
+          <div class="tm-spec">16px / 500 / 100%</div>
+        </div>
+        <div class="type-sample">
+          <span style="font-size:16px; font-weight:500; color:var(--text-on-brand); line-height:1; background:var(--brand-primary); padding:8px 14px; border-radius:10px; display:inline-block;">시작할게</span>
+        </div>
+        <div class="type-use">버튼 라벨</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="tm-name">caption</div>
+          <div class="tm-spec">14px / 400 / 150%</div>
+        </div>
+        <div class="type-sample">
+          <span style="font-size:14px; font-weight:400; color:var(--text-secondary); line-height:1.5;">이 흐름 아까우니까, 오늘도 가자</span>
+        </div>
+        <div class="type-use">인사말 보조, 멘트</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="tm-name">label</div>
+          <div class="tm-spec">13px / 400 / 150%</div>
+        </div>
+        <div class="type-sample">
+          <span style="font-size:13px; font-weight:400; color:var(--text-tertiary); line-height:1.5;">시간, 수치, 보조</span>
+        </div>
+        <div class="type-use">시간, 수치, 보조</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="tm-name">eyebrow</div>
+          <div class="tm-spec">12px / 500 / 100% / +1자간</div>
+        </div>
+        <div class="type-sample">
+          <span style="font-size:12px; font-weight:500; color:var(--brand-light); line-height:1; letter-spacing:0.5px;">이어서 풀기</span>
+        </div>
+        <div class="type-use">섹션 라벨, 카드 라벨</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="tm-name">nav</div>
+          <div class="tm-spec">11px / 400 / 100%</div>
+        </div>
+        <div class="type-sample">
+          <span style="font-size:11px; font-weight:400; color:var(--text-tertiary); line-height:1;">홈 · 학습 · 리포트 · 마이</span>
+        </div>
+        <div class="type-use">하단 탭</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ══ 3. SPACING ══ -->
+  <section>
+    <div class="section-splitter"><div class="sp-line"></div><div class="sp-num">03 · SPACING</div><div class="sp-line"></div></div>
+    <div class="sec-hd" style="margin-top:24px;">
+      <div class="sec-title">간격</div>
+      <div class="sec-desc">4px 베이스 스케일. 좌우 패딩 16/20 분리는 의도된 차이 — 카드는 살짝 넓게.</div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="color-group-label">Primitive — space scale</div>
+        <div class="spacing-grid">
+          <div class="spacing-row"><span class="sp-name">space-1</span><span class="sp-val">4px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:4px;"></div></div></div>
+          <div class="spacing-row"><span class="sp-name">space-2</span><span class="sp-val">8px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:8px;"></div></div></div>
+          <div class="spacing-row"><span class="sp-name">space-3</span><span class="sp-val">12px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:12px;"></div></div></div>
+          <div class="spacing-row"><span class="sp-name">space-4</span><span class="sp-val">16px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:16px;"></div></div></div>
+          <div class="spacing-row"><span class="sp-name">space-5</span><span class="sp-val">20px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:20px;"></div></div></div>
+          <div class="spacing-row"><span class="sp-name">space-6</span><span class="sp-val">22px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:22px;"></div></div></div>
+          <div class="spacing-row"><span class="sp-name">space-7</span><span class="sp-val">9px</span><div class="sp-bar-wrap"><div class="sp-bar" style="width:9px;"></div></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="color-group-label">Semantic — 의미값</div>
+        <div class="spacing-grid">
+          <div class="spacing-row"><span class="sp-name" style="width:150px;">pad-screen-card</span><span class="sp-val">16px</span><div class="sp-bar-wrap"></div><span class="sp-desc">카드 블록 좌우 여백</span></div>
+          <div class="spacing-row"><span class="sp-name" style="width:150px;">pad-screen-text</span><span class="sp-val">20px</span><div class="sp-bar-wrap"></div><span class="sp-desc">텍스트 좌우 여백</span></div>
+          <div class="spacing-row"><span class="sp-name" style="width:150px;">gap-section</span><span class="sp-val">22px</span><div class="sp-bar-wrap"></div><span class="sp-desc">섹션 간 상단</span></div>
+          <div class="spacing-row"><span class="sp-name" style="width:150px;">gap-label</span><span class="sp-val">11px</span><div class="sp-bar-wrap"></div><span class="sp-desc">라벨→콘텐츠</span></div>
+          <div class="spacing-row"><span class="sp-name" style="width:150px;">gap-row</span><span class="sp-val">9px</span><div class="sp-bar-wrap"></div><span class="sp-desc">카드 행 간</span></div>
+          <div class="spacing-row"><span class="sp-name" style="width:150px;">gap-inline</span><span class="sp-val">12px</span><div class="sp-bar-wrap"></div><span class="sp-desc">아이콘↔텍스트</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ══ 4. RADIUS ══ -->
+  <section>
+    <div class="section-splitter"><div class="sp-line"></div><div class="sp-num">04 · RADIUS</div><div class="sp-line"></div></div>
+    <div class="sec-hd" style="margin-top:24px;">
+      <div class="sec-title">라운딩</div>
+      <div class="sec-desc">모든 보더는 0.5px. 가늘게 가는 게 프리미엄 톤의 핵심.</div>
+    </div>
+
+    <div class="radius-grid">
+      <div class="radius-item">
+        <div class="radius-box" style="border-radius:9px;"></div>
+        <div style="text-align:center;">
+          <div class="token-name">radius-sm</div>
+          <div class="token-val">9px</div>
+          <div class="token-desc" style="margin-top:3px;">radius-badge</div>
+        </div>
+      </div>
+      <div class="radius-item">
+        <div class="radius-box" style="border-radius:11px;"></div>
+        <div style="text-align:center;">
+          <div class="token-name">radius-md</div>
+          <div class="token-val">11px</div>
+          <div class="token-desc" style="margin-top:3px;">radius-icon</div>
+        </div>
+      </div>
+      <div class="radius-item">
+        <div class="radius-box" style="border-radius:12px;"></div>
+        <div style="text-align:center;">
+          <div class="token-name">radius-lg</div>
+          <div class="token-val">12px</div>
+          <div class="token-desc" style="margin-top:3px;">radius-inner</div>
+        </div>
+      </div>
+      <div class="radius-item">
+        <div class="radius-box" style="border-radius:13px;"></div>
+        <div style="text-align:center;">
+          <div class="token-name">radius-xl</div>
+          <div class="token-val">13px</div>
+          <div class="token-desc" style="margin-top:3px;">radius-button</div>
+        </div>
+      </div>
+      <div class="radius-item">
+        <div class="radius-box" style="border-radius:14px;"></div>
+        <div style="text-align:center;">
+          <div class="token-name">radius-2xl</div>
+          <div class="token-val">14px</div>
+          <div class="token-desc" style="margin-top:3px;">radius-card</div>
+        </div>
+      </div>
+      <div class="radius-item">
+        <div class="radius-box" style="border-radius:20px;"></div>
+        <div style="text-align:center;">
+          <div class="token-name">radius-3xl</div>
+          <div class="token-val">20px</div>
+          <div class="token-desc" style="margin-top:3px;">radius-card-hero</div>
+        </div>
+      </div>
+      <div class="radius-item">
+        <div class="radius-box" style="border-radius:26px;"></div>
+        <div style="text-align:center;">
+          <div class="token-name">radius-device</div>
+          <div class="token-val">26px</div>
+          <div class="token-desc" style="margin-top:3px;">디바이스 외곽</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ══ 5. COMPONENTS ══ -->
+  <section>
+    <div class="section-splitter"><div class="sp-line"></div><div class="sp-num">05 · COMPONENTS</div><div class="sp-line"></div></div>
+    <div class="sec-hd" style="margin-top:24px;">
+      <div class="sec-title">컴포넌트 토큰</div>
+      <div class="sec-desc">자주 반복되는 조합을 컴포넌트 단위 토큰으로 미리 묶음. 피그마 컴포넌트 prop과 1:1로 연결.</div>
+    </div>
+
+    <div class="comp-grid">
+
+      <!-- Card/Hero -->
+      <div class="comp-card">
+        <div class="comp-card-hd">
+          <div class="comp-name">Card / Hero</div>
+          <div class="token-desc">오늘의 학습 카드</div>
+        </div>
+        <div class="comp-body">
+          <div class="preview-hero-card">
+            <div class="hero-eyebrow">
+              <span style="font-size:9px;">✦</span> AI 코치가 골랐어
+            </div>
+            <div class="hero-title">산화·환원의 정의</div>
+            <div class="hero-sub">집중 10문제</div>
+            <div class="hero-chips">
+              <span class="hero-chip">달성 1%</span>
+              <span class="hero-chip">+25점 예상</span>
+              <span class="hero-chip">35분</span>
+              <span class="hero-chip danger">취약 5개</span>
+            </div>
+            <div class="hero-ment">이 유형 네 번 틀렸어. 오늘 끝내버리자</div>
+            <button class="hero-btn">✦ AI 맞춤 학습 시작 →</button>
+          </div>
+          <div class="comp-token-list">
+            <div class="comp-token-row"><span class="ct-prop">배경</span><span class="ct-val">bg-surface-raised</span></div>
+            <div class="comp-token-row"><span class="ct-prop">보더</span><span class="ct-val">border-brand · 0.5px</span></div>
+            <div class="comp-token-row"><span class="ct-prop">라운딩</span><span class="ct-val">radius-card-hero (20px)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stat/Card + Row/Subject -->
+      <div class="comp-card">
+        <div class="comp-card-hd">
+          <div class="comp-name">Stat / Card</div>
+          <div class="token-desc">지표 칸</div>
+        </div>
+        <div class="comp-body">
+          <div class="stat-trio">
+            <div class="preview-stat" style="flex:1;">
+              <div class="stat-val">🔥 7일</div>
+              <div class="stat-lbl">연속 학습</div>
+            </div>
+            <div class="preview-stat" style="flex:1;">
+              <div class="stat-val highlight">52%</div>
+              <div class="stat-lbl">정답률</div>
+            </div>
+            <div class="preview-stat" style="flex:1;">
+              <div class="stat-val">155분</div>
+              <div class="stat-lbl">절약</div>
+            </div>
+          </div>
+          <div class="comp-token-list">
+            <div class="comp-token-row"><span class="ct-prop">배경</span><span class="ct-val">bg-surface-raised</span></div>
+            <div class="comp-token-row"><span class="ct-prop">라운딩</span><span class="ct-val">radius-card (14px)</span></div>
+            <div class="comp-token-row"><span class="ct-prop">라벨</span><span class="ct-val">label / text-tertiary</span></div>
+            <div class="comp-token-row"><span class="ct-prop">값</span><span class="ct-val">value / text-primary</span></div>
+            <div class="comp-token-row"><span class="ct-prop">정답률 값</span><span class="ct-val">brand-light</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row/Subject + Button + Rank -->
+      <div class="comp-card">
+        <div class="comp-card-hd">
+          <div class="comp-name">Row / Subject</div>
+          <div class="token-desc">이어풀기 행 · 베리언트: 과학/국어/영어</div>
+        </div>
+        <div class="comp-body">
+          <div class="preview-row">
+            <div class="row-icon" style="background:var(--subject-science-bg);">
+              <span style="color:var(--subject-science); font-size:16px;">🔬</span>
+            </div>
+            <div class="row-info">
+              <div class="row-name">통합과학 · 생명 시스템</div>
+              <div class="row-track">
+                <div class="row-fill" style="width:62%; background:var(--subject-science);"></div>
+              </div>
+            </div>
+            <span class="row-pct">62%</span>
+          </div>
+          <div class="preview-row">
+            <div class="row-icon" style="background:var(--subject-english-bg);">
+              <span style="color:var(--subject-english); font-size:16px;">📗</span>
+            </div>
+            <div class="row-info">
+              <div class="row-name">영어 · 단어</div>
+              <div class="row-track">
+                <div class="row-fill" style="width:28%; background:var(--subject-english);"></div>
+              </div>
+            </div>
+            <span class="row-pct">28%</span>
+          </div>
+          <div class="comp-token-list">
+            <div class="comp-token-row"><span class="ct-prop">아이콘 컨테이너</span><span class="ct-val">38×38, radius-icon, subject-*-bg</span></div>
+            <div class="comp-token-row"><span class="ct-prop">아이콘 색</span><span class="ct-val">subject-*</span></div>
+            <div class="comp-token-row"><span class="ct-prop">트랙</span><span class="ct-val">bg-inset · 높이 4px</span></div>
+            <div class="comp-token-row"><span class="ct-prop">바</span><span class="ct-val">subject-*</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Button/Primary -->
+      <div class="comp-card">
+        <div class="comp-card-hd">
+          <div class="comp-name">Button / Primary</div>
+          <div class="token-desc">메인 액션 버튼</div>
+        </div>
+        <div class="comp-body">
+          <button class="preview-btn">✦ AI 맞춤 학습 시작 →</button>
+          <div style="margin-top:10px;">
+            <button class="preview-btn" style="background:none; border:0.5px solid var(--border-default); color:var(--text-secondary);">리포트 보기 →</button>
+          </div>
+          <div class="comp-token-list">
+            <div class="comp-token-row"><span class="ct-prop">배경</span><span class="ct-val">brand-primary</span></div>
+            <div class="comp-token-row"><span class="ct-prop">텍스트</span><span class="ct-val">text-on-brand / body-button</span></div>
+            <div class="comp-token-row"><span class="ct-prop">라운딩</span><span class="ct-val">radius-button (13px)</span></div>
+            <div class="comp-token-row"><span class="ct-prop">패딩</span><span class="ct-val">15px</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ranking -->
+      <div class="comp-card">
+        <div class="comp-card-hd">
+          <div class="comp-name">★ Ranking</div>
+          <div class="token-desc">최저 위계 · 한 줄</div>
+        </div>
+        <div class="comp-body">
+          <div class="preview-rank">
+            <div>
+              <div class="rank-text">이번 주 우리 반 <b>12위</b></div>
+              <div class="rank-sub">한 칸만 더 올려보자</div>
+            </div>
+            <span style="color:var(--brand-light); font-size:14px;">↗</span>
+          </div>
+          <div class="comp-token-list">
+            <div class="comp-token-row"><span class="ct-prop">배경</span><span class="ct-val">bg-surface-sunken</span></div>
+            <div class="comp-token-row"><span class="ct-prop">라운딩</span><span class="ct-val">radius-button</span></div>
+            <div class="comp-token-row"><span class="ct-prop">등수</span><span class="ct-val">brand-light</span></div>
+            <div class="comp-token-row"><span class="ct-prop">위계</span><span class="ct-val">최하단 · 카드 없음</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Border rule -->
+      <div class="comp-card">
+        <div class="comp-card-hd">
+          <div class="comp-name">Border</div>
+          <div class="token-desc">모든 보더는 0.5px</div>
+        </div>
+        <div class="comp-body">
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="height:48px; border-radius:12px; border:0.5px solid var(--border-default); display:flex; align-items:center; justify-content:center;">
+              <span class="token-name">border-default · 0.5px · #262A45</span>
+            </div>
+            <div style="height:48px; border-radius:12px; border:0.5px solid var(--border-brand); display:flex; align-items:center; justify-content:center;">
+              <span class="token-name" style="color:var(--brand-light);">border-brand · 0.5px · #4F5BD5</span>
+            </div>
+          </div>
+          <div class="comp-token-list">
+            <div class="comp-token-row"><span class="ct-prop">두께</span><span class="ct-val">border-width-hairline 0.5px</span></div>
+            <div class="comp-token-row"><span class="ct-prop">원칙</span><span class="ct-val">가늘게 = 프리미엄 톤</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ══ 6. VOICE ══ -->
+  <section>
+    <div class="section-splitter"><div class="sp-line"></div><div class="sp-num">06 · VOICE TOKEN</div><div class="sp-line"></div></div>
+    <div class="sec-hd" style="margin-top:24px;">
+      <div class="sec-title">보이스톤 토큰</div>
+      <div class="sec-desc">화자 = 과외쌤 × 비서. 카피도 토큰화해서 일관성 유지. 말 거는 톤은 인사말·멘트·버튼·랭킹 문구에만.</div>
+    </div>
+
+    <div class="voice-grid">
+      <div class="voice-row head">
+        <div class="voice-cell th">상황</div>
+        <div class="voice-cell th">규칙</div>
+        <div class="voice-cell th" style="color:#f87171;">❌ Before</div>
+        <div class="voice-cell th" style="color:#86efac;">✓ After</div>
+      </div>
+      <div class="voice-row">
+        <div class="voice-cell situation">화자</div>
+        <div class="voice-cell rule">반말, 1:1 코칭</div>
+        <div class="voice-cell bad">존댓말 또는 시스템 말투</div>
+        <div class="voice-cell good">"오늘은 이거 하자"</div>
+      </div>
+      <div class="voice-row">
+        <div class="voice-cell situation">약점 언급</div>
+        <div class="voice-cell rule">분석체 금지, 코칭체</div>
+        <div class="voice-cell bad">"취약 유형이 분석되었습니다"</div>
+        <div class="voice-cell good">"이 유형 두 번 틀렸어"</div>
+      </div>
+      <div class="voice-row">
+        <div class="voice-cell situation">버튼</div>
+        <div class="voice-cell rule">1인칭 학생 시점</div>
+        <div class="voice-cell bad">"시작하기"</div>
+        <div class="voice-cell good">"시작할게"</div>
+      </div>
+      <div class="voice-row">
+        <div class="voice-cell situation">격려</div>
+        <div class="voice-cell rule">비서의 독점감 + 끌어주기</div>
+        <div class="voice-cell bad">"꾸준함이 중요합니다"</div>
+        <div class="voice-cell good">"7일째다. 이 흐름 아까우니까"</div>
+      </div>
+      <div class="voice-row">
+        <div class="voice-cell situation">섹션 라벨</div>
+        <div class="voice-cell rule">담백·중립 (말 걸지 않음)</div>
+        <div class="voice-cell bad">"이어서 계속 풀어볼까요?"</div>
+        <div class="voice-cell good">"이어서 풀기"</div>
+      </div>
+      <div class="voice-row">
+        <div class="voice-cell situation">웹(학부모)</div>
+        <div class="voice-cell rule">같은 화면, 존댓말 분리</div>
+        <div class="voice-cell bad">반말 그대로</div>
+        <div class="voice-cell good">"오늘 학습을 시작해 주세요"</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ══ 7. NAMING RULES ══ -->
+  <section>
+    <div class="section-splitter"><div class="sp-line"></div><div class="sp-num">07 · NAMING RULES</div><div class="sp-line"></div></div>
+    <div class="sec-hd" style="margin-top:24px;">
+      <div class="sec-title">네이밍 규칙</div>
+      <div class="sec-desc">카테고리-역할-변형 패턴. primitive는 척도형. 컴포넌트는 파스칼/슬래시.</div>
+    </div>
+
+    <div class="naming-grid">
+      <div class="naming-card">
+        <div class="nc-label">Semantic 토큰</div>
+        <div class="nc-ex">bg-surface-raised</div>
+        <div class="nc-ex">text-secondary</div>
+        <div class="nc-desc" style="margin-top:8px;">카테고리-역할-변형 구조. 화면에서 쓰는 모든 값은 이 패턴으로.</div>
+      </div>
+      <div class="naming-card">
+        <div class="nc-label">Primitive 토큰</div>
+        <div class="nc-ex">indigo-500</div>
+        <div class="nc-ex">neutral-850 · space-4</div>
+        <div class="nc-desc" style="margin-top:8px;">척도형(숫자 포함). 색은 밝기 스케일, 간격은 순번.</div>
+      </div>
+      <div class="naming-card">
+        <div class="nc-label">컴포넌트</div>
+        <div class="nc-ex">Card/Hero</div>
+        <div class="nc-ex">Row/Subject</div>
+        <div class="nc-desc" style="margin-top:8px;">파스칼케이스/슬래시 구분. 피그마 컴포넌트 prop과 1:1 연결.</div>
+      </div>
+      <div class="naming-card danger">
+        <div class="nc-label">절대 하지 말 것</div>
+        <div class="nc-ex">indigo-500 직접 사용 ✕</div>
+        <div class="nc-ex">font-weight: 600/700 ✕</div>
+        <div class="nc-desc" style="margin-top:8px;">화면에서 Primitive 직접 사용 금지. 두께 600·700 금지. 과목색을 브랜드색으로 대체 금지.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer style="border-top:0.5px solid var(--border-default); padding-top:24px; display:flex; justify-content:space-between; align-items:center;">
+    <div>
+      <div style="font-size:12px; font-weight:500; color:var(--brand-light); letter-spacing:2px;">AIDU DESIGN SYSTEM</div>
+      <div style="font-size:11px; color:var(--text-tertiary); margin-top:4px;">Style Guide v0.1 · 학생 홈(세로)에서 추출한 1차 토큰 세트</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:11px; color:var(--text-tertiary);">다음 단계</div>
+      <div style="font-size:11px; color:var(--text-secondary); margin-top:3px; line-height:1.7;">
+        ① Figma Variables 2컬렉션 등록 (_primitive · semantic)<br>
+        ② 가로(Landscape) 확장 시 이 토큰 위에서 작업<br>
+        ③ 화면 5~6개 쌓이면 토큰 JSON 추출 (개발 연동)
+      </div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
